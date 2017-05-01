@@ -29,9 +29,9 @@ for model in "${default_models[@]}"; do
       echo "2"
       echo ${d_p[@]}
       delete=("-window 10")
-      n_p=${d_p[@]/$delete}
+      n_p[@]=${d_p[@]/$delete}
       echo ${n_p[@]}
-      n_p=("${n_p[@]}" "$window")
+      n_p[@]=("${n_p[@]}" "$window")
       echo ${n_p[@]}
       d2v_out="doc2vec ""$model""$n_p"".txt"
       d2v_t="$time_fold""time_""$d2v_out"
