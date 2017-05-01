@@ -57,3 +57,4 @@ for model in "${default_models[@]}"; do
     done
   done
 done
+wait
