@@ -24,7 +24,7 @@ for model in "${default_models[@]}"; do
     d_p=${default_parameters[@]/$delete}
     d_p=("${d_p[@]}" "$negative")
     echo "1"
-    echo $d_p
+    echo ${d_p[@]}
     for window in "${windows[@]}"; do
       delete=("-window 10")
       n_p=${d_p[@]/$delete}
@@ -32,7 +32,7 @@ for model in "${default_models[@]}"; do
       d2v_out="doc2vec ""$model""$n_p"".txt"
       d2v_t="$time_fold""time_""$d2v_out"
       echo "2"
-      echo $n_p
+      echo ${n_p[@]}
       (time (python3 run_doc2vec_20ng.py -output "$space_fold""$d2v_out" $model $n_p >> "$d2v_t")) &>> "$d2v_t" &
     done
     for alpha in "${alphas[@]}"; do
@@ -42,7 +42,7 @@ for model in "${default_models[@]}"; do
         d2v_out="doc2vec ""$model""$n_p"".txt"
         d2v_t="$time_fold""time_""$d2v_out"
         echo "3"
-        echo $n_p
+        echo ${n_p[@]}
         (time (python3 run_doc2vec_20ng.py -output "$space_fold""$d2v_out" $model $n_p >> "$d2v_t")) &>> "$d2v_t" &
     done
     for size in "${sizes[@]}"; do
@@ -52,7 +52,7 @@ for model in "${default_models[@]}"; do
         d2v_out="doc2vec ""$model""$n_p"".txt"
         d2v_t="$time_fold""time_""$d2v_out"
         echo "4"
-        echo $n_p
+        echo ${n_p[@]}
         (time (python3 run_doc2vec_20ng.py -output "$space_fold""$d2v_out" $model $n_p >> "$d2v_t")) &>> "$d2v_t" &
     done
   done
