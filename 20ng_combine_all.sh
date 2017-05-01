@@ -28,13 +28,16 @@ for model in "${default_models[@]}"; do
     for window in "${windows[@]}"; do
       delete=("-window 10")
       n_p=${d_p[@]/$delete}
+      echo ${n_p[@]}
       n_p=("${n_p[@]}" "$window")
+      echo ${n_p[@]}
       d2v_out="doc2vec ""$model""$n_p"".txt"
       d2v_t="$time_fold""time_""$d2v_out"
       echo "2"
       echo ${n_p[@]}
       #(time (python3 run_doc2vec_20ng.py -output "$space_fold""$d2v_out" $model  ${n_p[@]} >> "$d2v_t")) &>> "$d2v_t" &
     done
+    exit
     for alpha in "${alphas[@]}"; do
         delete=("-alpha 0.05")
         n_p=${d_p[@]/$delete}
