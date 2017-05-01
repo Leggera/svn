@@ -29,7 +29,7 @@ for model in "${default_models[@]}"; do
       n_p=("${n_p[@]}" "$window")
       d2v_out="doc2vec ""$model""$n_p"".txt"
       d2v_t="$time_fold""time_""$d2v_out"
-      echo $n_p
+      echo ${n_p[@]}
       #(time (python3 run_doc2vec_20ng.py -output "$space_fold""$d2v_out" $model  ${n_p[@]} >> "$d2v_t")) &>> "$d2v_t" &
     done
     for alpha in "${alphas[@]}"; do
@@ -38,7 +38,7 @@ for model in "${default_models[@]}"; do
         n_p=("${n_p[@]}" "$alpha")
         d2v_out="doc2vec ""$model""$n_p"".txt"
         d2v_t="$time_fold""time_""$d2v_out"
-        echo $n_p
+        echo ${n_p[@]}
         #(time (python3 run_doc2vec_20ng.py -output "$space_fold""$d2v_out" $model  ${n_p[@]} >> "$d2v_t")) &>> "$d2v_t" &
     done
     for size in "${sizes[@]}"; do
@@ -47,7 +47,7 @@ for model in "${default_models[@]}"; do
         n_p=("${n_p[@]}" "$size")
         d2v_out="doc2vec ""$model""$n_p"".txt"
         d2v_t="$time_fold""time_""$d2v_out"
-        echo $n_p
+        echo ${n_p[@]}
         #(time (python3 run_doc2vec_20ng.py -output "$space_fold""$d2v_out" $model  ${n_p[@]} >> "$d2v_t")) &>> "$d2v_t" &
     done
   done
