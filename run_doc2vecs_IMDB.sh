@@ -30,7 +30,7 @@ cat ./data/full-train-pos.txt ./data/full-train-neg.txt ./data/test-pos.txt ./da
 awk 'BEGIN{a=0;}{print "_*" a " " $0; a++;}' < alldata.txt > alldata-id.txt
 
 
-sizes=('-size 50' '-size 200')
+sizes=('-size 50' '-size 100' '-size 200')
 alphas=('-alpha 0.075' '-alpha 0.2')
 windows=('-window 15' '-window 25')
 negatives=('-negative 6' '-negative 30')
@@ -79,7 +79,6 @@ for model in "${default_models[@]}"; do
 	(time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $negative $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
     done
 done
-wait
 for model in "${models[@]}"; do
     d_p=${default_parameters[@]}
     d2v_out="doc2vec ""$model"".txt"
