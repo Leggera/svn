@@ -1,9 +1,9 @@
 import pandas as pd
 import os
 res = pd.DataFrame()
-for dir in os.listdir('runs_IMDB'):
-  for csvfile in os.listdir('runs_IMDB/' + dir):
-    df = pd.read_csv('runs_IMDB/' + dir + "/" + csvfile)
+for dir in os.listdir('runs_20ng'):
+  for csvfile in os.listdir('runs_20ng/' + dir):
+    df = pd.read_csv('runs_20ng/' + dir + "/" + csvfile)
     res = pd.concat([res, df])
-res.to_csv('IMDB_.csv')
+res.to_csv('20ng_.csv')
   
