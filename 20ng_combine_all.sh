@@ -21,7 +21,7 @@ space_fold="space_p2v_20ng_combine/"
 for model in "${default_models[@]}"; do
   for negative in "${negatives[@]}"; do
     delete=("-negative 25")
-    d_p=${default_parameters[@]/$delete}
+    d_p=(${default_parameters[@]/$delete})
     d_p=("${d_p[@]}" "$negative")
     echo "1"
     echo ${d_p[@]}
@@ -29,7 +29,7 @@ for model in "${default_models[@]}"; do
       echo "2"
       echo ${d_p[@]}
       delete=("-window 10")
-      n_p=${d_p[@]/$delete}
+      n_p=(${d_p[@]/$delete})
       echo ${n_p[@]}
       n_p=("${n_p[@]}" "$window")
       echo ${n_p[@]}
