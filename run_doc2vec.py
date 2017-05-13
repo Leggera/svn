@@ -148,7 +148,7 @@ def run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample
 
             shuffle(train_shuffled)
 
-            #TODO#model.train(train_shuffled, total_examples = len(train_docs), epochs = 1)
+            model.train(train_shuffled, total_examples = len(train_docs), epochs = 1)
             for (word, count) in (counter.most_common()[165:195]):
                 if (word not in string.punctuation):     
                     n = []
@@ -167,7 +167,8 @@ def run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample
             N = 1000
             dev[epoch] = cost_function(model, train_docs, N)
             train[epoch] = cost_function(model, train_docs, len(train_docs))
-
+            print (dev[epoch])
+            print (train[epoch])
         df.to_csv(n_dir)
 
         duration = '%.1f' % elapsed()
@@ -178,6 +179,7 @@ def run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample
             infer_vecs[i, :] = model.infer_vector(doc.words, alpha=alpha, min_alpha=0.0001, steps=25)
             test_vectors[i] =  tuple([infer_vecs[i, :], doc.tags])
         test = cost(model, test_vectors, test_docs, len(test_docs))
+        print (test)
 
     model.save(output)
     f = open(output + 'test', 'wb')
