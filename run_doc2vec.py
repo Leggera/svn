@@ -48,13 +48,13 @@ def func(model, p_words, p_id, N):
         prod_term = np.dot(h, l2b.T).reshape(-1, 1)
         #compute cost function
         train_error_value -= np.sum(np.log(expit(-1 * prod_term[model.window:model.window + model.negative, :])), axis = 0)/N
-        np.seterr(all='raise')        
-        try:
-            train_error_value -= np.sum(np.log(expit(prod_term[:model.window, :])), axis = 0)/N
-        except:
+        #np.seterr(all='raise')        
+        #try:
+        train_error_value -= np.sum(np.log(expit(prod_term[:model.window, :])), axis = 0)/N
+        '''except:
             print (prod_term)
             print (expit(prod_term[0, :]))
-            exit()
+            exit()'''
     elif (model.dm == 1):
         #maximize similarity between target and document with context and minimize for negative samples
         C = np.sum([p_vec, np.sum(l1[1:, :])])
@@ -65,13 +65,10 @@ def func(model, p_words, p_id, N):
         
         #compute cost function
         train_error_value -= np.sum(np.log(expit(-1 * prod_term[1:, :])), axis = 0)/N
-        np.seterr(all='raise')
-        try:
-            train_error_value -= np.sum(np.log(expit(prod_term[0, :])), axis = 0)/N
-        except:
-            print (prod_term)
-            print (expit(prod_term[0, :]))
-            exit()
+        #np.seterr(all='raise')
+        #try:
+        train_error_value -= np.sum(np.log(expit(prod_term[0, :])), axis = 0)/N
+        
     return train_error_value
 
 def cost(model, p, test_docs, N):
