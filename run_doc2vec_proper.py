@@ -28,7 +28,7 @@ def load_data():
 
     train_docs = [doc for doc in alldocs if (doc.split == 'train' or doc.split == 'extra')]
     test_docs = [doc for doc in alldocs if doc.split == 'test']
-    return train_docs[:-10000], train_docs[-10000:], test_docs, alldocs
+    return train_docs[:-1000], train_docs[-1000:], test_docs, alldocs
 
 if __name__ == "__main__":
 
@@ -69,6 +69,6 @@ if __name__ == "__main__":
 
     train_docs, dev_docs, test_docs, alldocs = load_data()
 
-    print('%d docs: %d train, %d test' % (len(alldocs), len(train_docs), len(test_docs)))
+    print('%d docs: %d train, %d dev, %d test' % (len(alldocs), len(train_docs), len(dev_docs), len(test_docs)))
     #cores = multiprocessing.cpu_count()
     run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output)

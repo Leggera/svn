@@ -67,14 +67,14 @@ def func(model, p_words, p_id, N):
         
     return train_error_value
 
-def cost(model, p, test_docs, N):
+def cost(model, p, test_docs, N, len_train):
     
     train_error_value = 0
     for i in p:
         p_vec = p[i][0].reshape(1, -1)
         tag = p[i][1][0]
         p_id = int(tag[5:])
-        p_words = [word for word in test_docs[p_id - 25000].words if word in model.wv.vocab]#TODO 25000 = len(train_docs)
+        p_words = [word for word in test_docs[p_id - len_train].words if word in model.wv.vocab]#TODO 25000 = len(train_docs)
         train_error_value += func(model, p_words, p_id, N)
     #print ('%d documents %f' % (N, np.sum(train_error_value)))
     return train_error_value
@@ -101,7 +101,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
     model.build_vocab(train_docs + dev_docs)
 
 
-    print("START %s" % datetime.datetime.now())
+    
 
     train_shuffled = train_docs
     infer_vecs = np.zeros((len(test_docs), size))
@@ -127,7 +127,15 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
 
     dev = np.zeros(passes)
     train = np.zeros(passes)
-    duration = 'na'
+    train_N = 3000
+    train_ids_for_cost = np.linspace(0, len(train_docs) - 1, num = train_N)
+    train_for_cost = []
+    for i in train_ids_for_cost:
+        train_for_cost += [train_docs[int(i)]]
+
+    
+
+    print("START %s" % datetime.datetime.now())
 
     with elapsed_timer() as elapsed:
 
@@ -160,26 +168,26 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
             print ('epoch %d' % (epoch + 1))
             #N = 1000
             dev[epoch] = cost_function(model, dev_docs, len(dev_docs))
-            train[epoch] = cost_function(model, train_docs, len(train_docs))
+            
+            train[epoch] = cost_function(model, train_for_cost, train_N)
             print (dev[epoch])
             print (train[epoch])
         df.to_csv(n_dir)
 
-        duration = '%.1f' % elapsed()
-
-        whole_duration += elapsed()
+        
         
         for i, doc in enumerate(test_docs):
             infer_vecs[i, :] = model.infer_vector(doc.words, alpha=alpha, min_alpha=0.0001, steps=25)
             test_vectors[i] =  tuple([infer_vecs[i, :], doc.tags])
-        test = cost(model, test_vectors, test_docs, len(test_docs))
+        test = cost(model, test_vectors, test_docs, len(test_docs), len([doc for doc in train_docs if doc.split == 'train']))
         print (test)
 
+    whole_duration += elapsed()
     model.save(output)
     f = open(output + 'test', 'wb')
     pickle.dump(test_vectors, f)
 
-    print ('dev_cost (%d documents)' %N, dev)
+    print ('dev_cost (%d documents)' %len(dev_docs), dev)
     print ('train_cost', train)
     print ('infer_cost', test)
 
