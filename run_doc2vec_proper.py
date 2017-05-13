@@ -71,4 +71,4 @@ if __name__ == "__main__":
 
     print('%d docs: %d train, %d test' % (len(alldocs), len(train_docs), len(test_docs)))
     #cores = multiprocessing.cpu_count()
-    run_doc2vec(train_docs, test_docs, alldocs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output)
+    run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output)
