@@ -25,13 +25,13 @@ def func(model, p_words, p_id, N):
     for word in context_words:
         c.append(model.wv.vocab[word])
     context_index = [c_.index for c_ in c]
-    context_vectors = model.wv.syn0
+    context_vectors = np.float64(model.wv.syn0)
     
     #retrive their vectors
     l1 = context_vectors[context_index]
 
     #and vector of the document itself
-    p_vec = model.docvecs[p_id].reshape(-1, 1).T
+    p_vec = np.float64(model.docvecs[p_id].reshape(-1, 1).T)
     
     word_indices = []
     while len(word_indices) < model.negative:
@@ -43,30 +43,26 @@ def func(model, p_words, p_id, N):
 
         h = p_vec
         #maximize similarity between context and document and minimize for negative samples
-        l2b = np.concatenate([l1, model.syn1neg[word_indices]], axis = 0)
+        l2b = np.concatenate([l1, np.float64(model.syn1neg[word_indices])], axis = 0)
         #compute dot product between context and document with negative samples
         prod_term = np.dot(h, l2b.T).reshape(-1, 1)
         #compute cost function
-        train_error_value -= np.sum(np.log(expit(-1 * prod_term[model.window:model.window + model.negative, :])), axis = 0)/N
-        #np.seterr(all='raise')        
-        #try:
+        train_error_value -= np.sum(np.log(expit(-1 * prod_term[model.window:model.window + model.negative, :])), axis = 0)/N      
+        
         train_error_value -= np.sum(np.log(expit(prod_term[:model.window, :])), axis = 0)/N
-        '''except:
-            print (prod_term)
-            print (expit(prod_term[0, :]))
-            exit()'''
+
     elif (model.dm == 1):
         #maximize similarity between target and document with context and minimize for negative samples
         C = np.sum([p_vec, np.sum(l1[1:, :])])
         h = C/(l1.shape[0] + 1)
         l2b = np.concatenate([l1[0, :].reshape(1, -1), model.syn1neg[word_indices]], axis = 0)
         #compute dot product between target word and context, document, negative samples
+        
         prod_term = np.dot(h, l2b.T).reshape(1, -1).T
         
         #compute cost function
         train_error_value -= np.sum(np.log(expit(-1 * prod_term[1:, :])), axis = 0)/N
-        #np.seterr(all='raise')
-        #try:
+        
         train_error_value -= np.sum(np.log(expit(prod_term[0, :])), axis = 0)/N
         
     return train_error_value
@@ -97,12 +93,12 @@ def cost_function(model, docs, N):
     #print ('%d documents %f' % (N, np.sum(train_error_value)))
     return train_error_value
 
-def run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output):
+def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output):
 
     assert gensim.models.doc2vec.FAST_VERSION > -1, "this will be painfully slow otherwise"
 
     model = Doc2Vec(dm=dm, dbow_words=1, size=size, window=window, alpha = alpha, negative=negative, sample=sample, workers=cores, min_count = min_count, iter = 1)
-    model.build_vocab(train_docs)
+    model.build_vocab(train_docs + dev_docs)
 
 
     print("START %s" % datetime.datetime.now())
@@ -144,7 +140,7 @@ def run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample
         for epoch in range(passes):
 
             shuffle(train_shuffled)
-
+            
             model.train(train_shuffled, total_examples = len(train_docs), epochs = 1)
             for (word, count) in (counter.most_common()[165:195]):
                 if (word not in string.punctuation):     
@@ -161,8 +157,9 @@ def run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample
                     n += ('%f\n' % g[1])
                 df.loc[p_id, epoch+1] = ''.join(n)
             #model.alpha -= alpha_delta
-            N = 1000
-            dev[epoch] = cost_function(model, train_docs, N)
+            print ('epoch %d' % (epoch + 1))
+            #N = 1000
+            dev[epoch] = cost_function(model, dev_docs, len(dev_docs))
             train[epoch] = cost_function(model, train_docs, len(train_docs))
             print (dev[epoch])
             print (train[epoch])

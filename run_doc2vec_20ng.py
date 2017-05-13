@@ -69,7 +69,9 @@ if __name__ == "__main__":
 
     alldocs = train_docs + test_docs
 
+    dev_docs = []
+
     print('%d docs: %d train-sentiment, %d test-sentiment' % (len(alldocs), len(train_docs), len(test_docs)))
 
-    run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output)
+    run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output)
 
