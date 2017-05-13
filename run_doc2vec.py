@@ -41,22 +41,37 @@ def func(model, p_words, p_id, N):
 
     if (model.dm == 0):
 
+        h = p_vec
         #maximize similarity between context and document and minimize for negative samples
-        l2b = np.concatenate([p_vec, model.syn1neg[word_indices]], axis = 0)  # 2d matrix, k+1 x layer1_size 
-        #compute dot product between context and document with negative samples       
-        prod_term = np.dot(l1, l2b.T)
+        l2b = np.concatenate([l1, model.syn1neg[word_indices]], axis = 0)
+        #compute dot product between context and document with negative samples
+        prod_term = np.dot(h, l2b.T).reshape(-1, 1)
         #compute cost function
-        train_error_value -= np.sum(np.log(expit(-1 * prod_term[:, range(1, prod_term.shape[1])])), axis = 0)/N
-        train_error_value -= np.sum(np.log(expit(prod_term[:, 0])), axis = 0)/N
+        train_error_value -= np.sum(np.log(expit(-1 * prod_term[model.window:model.window + model.negative, :])), axis = 0)/N
+        np.seterr(all='raise')        
+        try:
+            train_error_value -= np.sum(np.log(expit(prod_term[:model.window, :])), axis = 0)/N
+        except:
+            print (prod_term)
+            print (expit(prod_term[0, :]))
+            exit()
     elif (model.dm == 1):
         #maximize similarity between target and document with context and minimize for negative samples
-        l2b = np.concatenate([np.sum([p_vec, l1[1:, :]]), model.syn1neg[word_indices]], axis = 0)
+        C = np.sum([p_vec, np.sum(l1[1:, :])])
+        h = C/(l1.shape[0] + 1)
+        l2b = np.concatenate([l1[0, :].reshape(1, -1), model.syn1neg[word_indices]], axis = 0)
         #compute dot product between target word and context, document, negative samples
-        prod_term = np.dot(l1[0, :], l2b.T).reshape(1, -1)
+        prod_term = np.dot(h, l2b.T).reshape(1, -1).T
+        
         #compute cost function
         train_error_value -= np.sum(np.log(expit(-1 * prod_term[1:, :])), axis = 0)/N
-        train_error_value -= np.sum(np.log(expit(prod_term[0, :])), axis = 0)/N
-
+        np.seterr(all='raise')
+        try:
+            train_error_value -= np.sum(np.log(expit(prod_term[0, :])), axis = 0)/N
+        except:
+            print (prod_term)
+            print (expit(prod_term[0, :]))
+            exit()
     return train_error_value
 
 def cost(model, p, test_docs, N):
@@ -66,10 +81,10 @@ def cost(model, p, test_docs, N):
         p_vec = p[i][0].reshape(1, -1)
         tag = p[i][1][0]
         p_id = int(tag[5:])
-        p_words = [word for word in test_docs[p_id - 25000].words if word in model.wv.vocab]
+        p_words = [word for word in test_docs[p_id - 25000].words if word in model.wv.vocab]#TODO 25000 = len(train_docs)
         train_error_value += func(model, p_words, p_id, N)
     #print ('%d documents %f' % (N, np.sum(train_error_value)))
-    return np.sum(train_error_value)
+    return train_error_value
 
 def cost_function(model, docs, N):
 
@@ -83,9 +98,9 @@ def cost_function(model, docs, N):
         train_error_value += func(model, p_words, p_id, N)
             
     #print ('%d documents %f' % (N, np.sum(train_error_value)))
-    return np.sum(train_error_value)
+    return train_error_value
 
-def run_doc2vec(train_docs, test_docs, alldocs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output):
+def run_doc2vec(train_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output):
 
     assert gensim.models.doc2vec.FAST_VERSION > -1, "this will be painfully slow otherwise"
 
@@ -133,7 +148,7 @@ def run_doc2vec(train_docs, test_docs, alldocs, dm, size, window, alpha, negativ
 
             shuffle(train_shuffled)
 
-            model.train(train_shuffled, total_examples = len(train_docs), epochs = 1)
+            #TODO#model.train(train_shuffled, total_examples = len(train_docs), epochs = 1)
             for (word, count) in (counter.most_common()[165:195]):
                 if (word not in string.punctuation):     
                     n = []
