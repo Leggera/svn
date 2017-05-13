@@ -69,18 +69,15 @@ for model in "${default_models[@]}"; do
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (python3 run_doc2vec_proper.py  -output "$space_fold""$d2v_out" $window $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 	done  
-done
-wait
-for model in "${default_models[@]}"; do
-    for negative in "${negatives[@]}"; do
-	delete=("-negative 25")
-	d_p=${default_parameters[@]/$delete}
-	#echo $d_p
-	#echo $negative
-	d2v_out="doc2vec ""$model""$negative"".txt"
-	d2v_t="$time_fold""time_""$d2v_out"
-	(time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $negative $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
-    done
+	for negative in "${negatives[@]}"; do
+	    delete=("-negative 25")
+	    d_p=${default_parameters[@]/$delete}
+	    #echo $d_p
+	    #echo $negative
+	    d2v_out="doc2vec ""$model""$negative"".txt"
+	    d2v_t="$time_fold""time_""$d2v_out"
+	    (time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $negative $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
+    	done
 done
 for model in "${models[@]}"; do
     d_p=${default_parameters[@]}
@@ -88,4 +85,3 @@ for model in "${models[@]}"; do
     d2v_t="$time_fold""time_""$d2v_out"
     (time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 done
-wait
