@@ -79,6 +79,7 @@ for model in "${default_models[@]}"; do
 	(time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $negative $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
     done
 done
+wait
 for model in "${models[@]}"; do
     d_p=${default_parameters[@]}
     d2v_out="doc2vec ""$model"".txt"
