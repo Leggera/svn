@@ -30,12 +30,12 @@ cat ./data/full-train-pos.txt ./data/full-train-neg.txt ./data/test-pos.txt ./da
 awk 'BEGIN{a=0;}{print "_*" a " " $0; a++;}' < alldata.txt > alldata-id.txt
 
 
-sizes=('-size 50' '-size 100' '-size 200')
-alphas=('-alpha 0.075' '-alpha 0.2')
-windows=('-window 15' '-window 25')
-negatives=('-negative 6' '-negative 30')
-models=('-cbow 1 -sample 3e-5' '-cbow 1 -sample 3e-4' '-cbow 1 -sample 3e-3' '-cbow 0 -sample 3e-3' '-cbow 0 -sample 3e-2' '-cbow 0 -sample 3e-1')
-default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -iter 25 -threads 1 -min_count 5 -train alldata-id.txt')
+sizes=('-size 75' '-size 300')
+alphas=('-alpha 0.025' '-alpha 0.1')
+windows=('-window 5' '-window 20')
+negatives=('-negative 12' '-negative 50')
+models=('-cbow 1 -sample 1e-5' '-cbow 1 -sample 1e-4' '-cbow 1 -sample 1e-3' '-cbow 0 -sample 1e-3' '-cbow 0 -sample 1e-2' '-cbow 0 -sample 1e-1')
+default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -iter 25 -threads 1 -min_count 1 -train alldata-id.txt')
 default_models=('-cbow 0 -sample 1e-2' '-cbow 1 -sample 1e-4')
 mkdir time_p2v
 time_fold="time_p2v/"
@@ -78,6 +78,7 @@ for model in "${default_models[@]}"; do
 	d2v_t="$time_fold""time_""$d2v_out"
 	(time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $negative $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
     done
+    wait
 done
 for model in "${models[@]}"; do
     d_p=${default_parameters[@]}

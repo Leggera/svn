@@ -1,35 +1,177 @@
 import gensim
 from gensim.models import Doc2Vec
-import gensim.models.doc2vec
+#import gensim.models.doc2vec
 import datetime
 from contextlib import contextmanager
 from timeit import default_timer
+from scipy.special import expit
+import numpy as np
+import random
+import pickle
+from random import shuffle
+import collections
+import string
+import os
+import pandas as pd
+
+def func(model, p_words, p_id, N):
+
+    train_error_value = 0
+    if (len(p_words) < model.window):
+        context_words = p_words
+    else:    
+        context_words = random.sample(p_words, model.window)
+    c = []
+    for word in context_words:
+        c.append(model.wv.vocab[word])
+    context_index = [c_.index for c_ in c]
+    context_vectors = model.wv.syn0
+    
+    #retrive their vectors
+    l1 = context_vectors[context_index]
+
+    #and vector of the document itself
+    p_vec = model.docvecs[p_id].reshape(-1, 1).T
+    
+    word_indices = []
+    while len(word_indices) < model.negative:
+        #choose random word as negative samples
+        w = model.cum_table.searchsorted(model.random.randint(model.cum_table[-1]))
+        word_indices.append(w)
+
+    if (model.dm == 0):
+
+        #maximize similarity between context and document and minimize for negative samples
+        l2b = np.concatenate([p_vec, model.syn1neg[word_indices]], axis = 0)  # 2d matrix, k+1 x layer1_size 
+        #compute dot product between context and document with negative samples       
+        prod_term = np.dot(l1, l2b.T)
+        #compute cost function
+        train_error_value -= np.sum(np.log(expit(-1 * prod_term[:, range(1, prod_term.shape[1])])), axis = 0)/N
+        train_error_value -= np.sum(np.log(expit(prod_term[:, 0])), axis = 0)/N
+    elif (model.dm == 1):
+        #maximize similarity between target and document with context and minimize for negative samples
+        l2b = np.concatenate([np.sum([p_vec, l1[1:, :]]), model.syn1neg[word_indices]], axis = 0)
+        #compute dot product between target word and context, document, negative samples
+        prod_term = np.dot(l1[0, :], l2b.T).reshape(1, -1)
+        #compute cost function
+        train_error_value -= np.sum(np.log(expit(-1 * prod_term[1:, :])), axis = 0)/N
+        train_error_value -= np.sum(np.log(expit(prod_term[0, :])), axis = 0)/N
+
+    return train_error_value
+
+def cost(model, p, test_docs, N):
+    
+    train_error_value = 0
+    for i in p:
+        p_vec = p[i][0].reshape(1, -1)
+        tag = p[i][1][0]
+        p_id = int(tag[5:])
+        p_words = [word for word in test_docs[p_id - 25000].words if word in model.wv.vocab]
+        train_error_value += func(model, p_words, p_id, N)
+    #print ('%d documents %f' % (N, np.sum(train_error_value)))
+    return np.sum(train_error_value)
+
+def cost_function(model, docs, N):
+
+    train_error_value = 0
+    
+    #for each of N random documents
+    for p_id in random.sample(range(len(docs)), N):
+
+        p_words = [word for word in docs[p_id].words if word in model.wv.vocab]
+        #choose some words from the document
+        train_error_value += func(model, p_words, p_id, N)
+            
+    #print ('%d documents %f' % (N, np.sum(train_error_value)))
+    return np.sum(train_error_value)
 
 def run_doc2vec(train_docs, test_docs, alldocs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output):
 
     assert gensim.models.doc2vec.FAST_VERSION > -1, "this will be painfully slow otherwise"
 
-    model = Doc2Vec(dm=dm, size=size, window=window, alpha = alpha, negative=negative, sample=sample, workers=cores, min_count = min_count, iter=passes)
-    model.build_vocab(alldocs)
+    model = Doc2Vec(dm=dm, dbow_words=1, size=size, window=window, alpha = alpha, negative=negative, sample=sample, workers=cores, min_count = min_count, iter = 1)
+    model.build_vocab(train_docs)
 
-    #min_alpha = 0.001
-    #alpha_delta = (alpha - min_alpha) / passes
 
     print("START %s" % datetime.datetime.now())
 
-    
+    train_shuffled = train_docs
+    infer_vecs = np.zeros((len(test_docs), size))
+    test_vectors = dict()
     whole_duration = 0
+    
+    words = []
+    for doc in train_docs:
+        words += doc.words 
+    counter = collections.Counter(words)
+    
+           
+    
+    i = output.find('/')
+    if not os.path.exists('neighbours_' + output[:i] + '/'):
+        os.mkdir('neighbours_' + output[:i]      + '/')
+    
+    n_dir = 'neighbours_' + output + '.csv'
 
+    df = pd.DataFrame(index=['word'], columns=['epoch'])
+
+    p_ids = np.linspace(0, len(train_docs) - 1, num = 5)
+
+    dev = np.zeros(passes)
+    train = np.zeros(passes)
     duration = 'na'
-    with elapsed_timer() as elapsed:
-        model.train(train_docs, total_examples = len(train_docs), epochs = model.iter)
-        duration = '%.1f' % elapsed()
-        whole_duration += elapsed() 
 
-        model.train_words = False
-        model.train_labels = True
-        model.train(test_docs, total_examples = len(test_docs), epochs = model.iter)
+    with elapsed_timer() as elapsed:
+
+        '''min_alpha = 0.0001
+        if (passes > 1):
+            alpha_delta = (alpha - min_alpha) / (passes - 1)
+        else:
+            alpha_delta = 0'''      
+
+        for epoch in range(passes):
+
+            shuffle(train_shuffled)
+
+            model.train(train_shuffled, total_examples = len(train_docs), epochs = 1)
+            for (word, count) in (counter.most_common()[165:195]):
+                if (word not in string.punctuation):     
+                    n = []
+                    for g in model.wv.most_similar(word, topn=15):
+                        n += ('%s ' % g[0])
+                        n += ('%f\n' % g[1])
+                    df.loc[word, epoch+1] = ''.join(n)
+                    
+            for p_id in p_ids:
+                n = []
+                for g in model.wv.similar_by_vector(model.docvecs[int(p_id)], topn=15):
+                    n += ('%s ' % g[0])
+                    n += ('%f\n' % g[1])
+                df.loc[p_id, epoch+1] = ''.join(n)
+            #model.alpha -= alpha_delta
+            N = 1000
+            dev[epoch] = cost_function(model, train_docs, N)
+            train[epoch] = cost_function(model, train_docs, len(train_docs))
+
+        df.to_csv(n_dir)
+
+        duration = '%.1f' % elapsed()
+
+        whole_duration += elapsed()
+        
+        for i, doc in enumerate(test_docs):
+            infer_vecs[i, :] = model.infer_vector(doc.words, alpha=alpha, min_alpha=0.0001, steps=25)
+            test_vectors[i] =  tuple([infer_vecs[i, :], doc.tags])
+        test = cost(model, test_vectors, test_docs, len(test_docs))
+
     model.save(output)
+    f = open(output + 'test', 'wb')
+    pickle.dump(test_vectors, f)
+
+    print ('dev_cost (%d documents)' %N, dev)
+    print ('train_cost', train)
+    print ('infer_cost', test)
+
     print("END %s" % str(datetime.datetime.now()))
     print("duration %s" % str(whole_duration))
 

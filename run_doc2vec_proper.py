@@ -14,8 +14,16 @@ def load_data():
             tokens = gensim.utils.to_unicode(line).split()
             words = tokens[1:]
             tags = ['SENT_'+ str(line_no)] # `tags = [tokens[0]]` would also work at extra memory cost
-            split = ['train','test','extra','extra'][line_no//25000]  # 25k train, 25k test, 25k + 25k extra
-            sentiment = [1.0, 0.0, 1.0, 0.0, None, None, None, None][line_no//12500] # [12.5K pos, 12.5K neg]*2 then unknown
+            if (line_no < 25000):
+                split = 'train'
+                sentiment = [1.0, 0.0][line_no//12500]
+            elif (line_no < 50000):
+                split = 'test'
+                sentiment = [1.0, 0.0, 1.0, 0.0][line_no//12500]#
+            else:
+                split = 'extra'
+                sentiment = None
+             # [12.5K pos, 12.5K neg]*2 then unknown
             alldocs.append(SentimentDocument(words, tags, split, sentiment))
 
     train_docs = [doc for doc in alldocs if (doc.split == 'train' or doc.split == 'extra')]
@@ -47,6 +55,7 @@ if __name__ == "__main__":
     if (output is None):
         parser.error('You need to pass output file name to the -output parameter')
 
+    
     dm = int(args.cbow)
     size = int(args.size)
     window = int(args.window)
@@ -60,6 +69,6 @@ if __name__ == "__main__":
 
     train_docs, test_docs, alldocs = load_data()
 
-    print('%d docs: %d train-sentiment, %d test-sentiment' % (len(alldocs), len(train_docs), len(test_docs)))
+    print('%d docs: %d train, %d test' % (len(alldocs), len(train_docs), len(test_docs)))
     #cores = multiprocessing.cpu_count()
     run_doc2vec(train_docs, test_docs, alldocs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output)

@@ -12,6 +12,8 @@ import numpy as np
 #import statsmodels.api as sm
 import argparse
 from datetime import datetime
+import sys
+import traceback
 
 def DocumentVectors(model):
 
@@ -25,17 +27,17 @@ def DocumentVectors(model):
         DocumentVectors1 = [model_w2v[w] for w in vec_vocab[25000:50000]]
     elif(model_name == "doc2vec"): #TODO'''
         
-    try:
-        model_d2v = Doc2Vec.load(model)    #loading saved model 
-    except:#if loading failed
-        print ("trouble loading model")
-        print (model)#print which model causes the problem
-        exit()
+    
+    model_d2v = Doc2Vec.load(model)    #loading saved model 
     #print model_d2v.docvecs.doctags
     DocumentVectors0 = np.array([model_d2v.docvecs[tag] for tag in model_d2v.docvecs.doctags if 'train' in tag])
-    DocumentVectors1 = np.array([model_d2v.docvecs[tag] for tag in model_d2v.docvecs.doctags if 'test' in tag])
+    #DocumentVectors1 = np.array([model_d2v.docvecs[tag] for tag in model_d2v.docvecs.doctags if 'test' in tag])
+    f = open(model + 'test', 'rb')
+    p = pickle.load(f)
+    DocumentVectors1 = np.concatenate([p[i][0].reshape(1, -1) for i in p])
+    test_labels = [p[i][1][0].split()[2] for i in p]
     train_labels = [tag.split()[2] for tag in model_d2v.docvecs.doctags if 'train' in tag] #TODO int(split)? 
-    test_labels = [tag.split()[2] for tag in model_d2v.docvecs.doctags if 'test' in tag] 
+    #test_labels = [tag.split()[2] for tag in model_d2v.docvecs.doctags if 'test' in tag] 
     return (DocumentVectors0, train_labels, DocumentVectors1, test_labels)
 
 def Classification(classifier, C, train, train_labels, test, test_labels):
@@ -65,7 +67,7 @@ def Classification(classifier, C, train, train_labels, test, test_labels):
     train_prediction = clf.predict(train) #predict on train
     train_accuracy = sum(train_prediction == train_labels)/len(train_labels) #train accuracy
     train_scores = (classification_report(train_labels, train_prediction)).split('\n')#precision, recall and F-score on train data
-    train_score =  ' '.join(train_scores[0].lstrip().split(' ')[:-1]) +'\n' + ' '.join(test_scores[-2].split(' ')[3:-1])
+    train_score =  ' '.join(train_scores[0].lstrip().split(' ')[:-1]) +'\n' + ' '.join(train_scores[-2].split(' ')[3:-1])
     return 'test %.3f train %.3f' % (test_accuracy, train_accuracy) + '\n' + 'train: ' + train_score + '\n' + 'test: ' + test_score, k[:-1]
 
 def time_str():
@@ -81,8 +83,8 @@ def main(space_dir, classifier, C = None):
 
     #future DataFrame fields
     d0 = ['implementation']
-    parameters = ['size', 'alpha', 'window', 'negative']
-    columns = ['size', 'alpha', 'window', 'negative', 'cbow0_sample', 'cbow1_sample']
+    parameters = ['size', 'alpha', 'window', 'negative', 'min_count']
+    columns = ['size', 'alpha', 'window', 'negative', 'cbow0_sample', 'cbow1_sample', 'min_count']
     best_params = ['best_parameters']
     classifiers = ['LogReg', 'LinearSVC']
     
@@ -91,6 +93,7 @@ def main(space_dir, classifier, C = None):
     default_parameters['alpha'] = 0.05
     default_parameters['window'] = 10
     default_parameters['negative'] = 25
+    default_parameters['min_count'] = 1
 
     if (C is not None): #if C was given as an input value then initialize classifier with it
         classifiers_dict['LogReg'] = LogReg(C = C)
@@ -176,11 +179,21 @@ def main(space_dir, classifier, C = None):
                             else:
                                 df.set_value(index, 'cbow1_sample', '1e-4')
 
-
+                            
                             #load train and test vectors from PV-DBOW model + labels
-                            DocumentVectors0_0, train_labels, DocumentVectors1_0, test_labels = DocumentVectors(space_dir + model)
+                            try:
+                                DocumentVectors0_0, train_labels, DocumentVectors1_0, test_labels = DocumentVectors(space_dir + model)
+                            except:
+                                print (model)#print which model causes the problem
+                                traceback.print_exc(file=sys.stdout)
+                                continue
                             #load train and test vectors from PV-DM model + labels
-                            DocumentVectors0_1, train_labels, DocumentVectors1_1, test_labels = DocumentVectors(space_dir + other_model+'.txt')
+                            try:
+                                DocumentVectors0_1, train_labels, DocumentVectors1_1, test_labels = DocumentVectors(space_dir + other_model+'.txt')
+                            except:
+                                print (other_model)#print which model causes the problem
+                                traceback.print_exc(file=sys.stdout)
+                                continue
                             #concatenate PV-DBOW and PV-DM train models
                             DocumentVectors0 = np.concatenate((DocumentVectors0_0, DocumentVectors0_1), axis=1)
                             #concatenate PV-DBOW and PV-DM test models
@@ -204,12 +217,15 @@ if __name__ == "__main__":
     
     parser.add_argument("-vectors", nargs='?', default='space_p2v_20ng/', help = 'paragraph2vec vectors file.')
     
-    parser.add_argument("-classifier", help = 'classifier name (lr or linearsvc)')
+    parser.add_argument("-classifier", choices=['lr','linearsvc'], help = 'classifier name (lr or linearsvc)')
     
     parser.add_argument("-C", nargs='?', default='None', help = 'regularization parameter')
     
     args = parser.parse_args()
     space_dir = args.vectors
+    if (space_dir is not None):
+        if (not space_dir.endswith('/')):
+            space_dir = space_dir + '/'
     if (args.classifier == 'lr'):
         classifier = 'LogReg'
     elif (args.classifier == 'linearsvc'):
