@@ -73,7 +73,7 @@ def cost(model, p, test_docs, N, len_train):
     for i in p:
         p_vec = p[i][0].reshape(1, -1)
         tag = p[i][1][0]
-        p_id = int(tag[5:])
+        p_id = int(tag[5:].split()[0])
         p_words = [word for word in test_docs[p_id - len_train].words if word in model.wv.vocab]#TODO 25000 = len(train_docs)
         train_error_value += func(model, p_words, p_id, N)
     #print ('%d documents %f' % (N, np.sum(train_error_value)))
@@ -139,11 +139,11 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
 
     with elapsed_timer() as elapsed:
 
-        '''min_alpha = 0.0001
+        min_alpha = 0.0001
         if (passes > 1):
             alpha_delta = (alpha - min_alpha) / (passes - 1)
         else:
-            alpha_delta = 0'''      
+            alpha_delta = 0    
 
         for epoch in range(passes):
 
@@ -164,7 +164,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
                     n += ('%s ' % g[0])
                     n += ('%f\n' % g[1])
                 df.loc[p_id, epoch+1] = ''.join(n)
-            #model.alpha -= alpha_delta
+            model.alpha -= alpha_delta
             print ('epoch %d' % (epoch + 1))
             #N = 1000
             dev[epoch] = cost_function(model, dev_docs, len(dev_docs))
