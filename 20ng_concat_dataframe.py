@@ -14,6 +14,7 @@ import argparse
 from datetime import datetime
 import sys
 import traceback
+import pickle
 
 def DocumentVectors(model):
 
@@ -51,7 +52,7 @@ def Classification(classifier, C, train, train_labels, test, test_labels):
         clf.fit(train, train_labels)
         k = "C " + str(C)
     else:               #GridSearch
-        clf = GridSearchCV(classifiers_dict[classifier], param_grid = search_parameters[classifier], error_score=0.0, n_jobs = -1)
+        clf = GridSearchCV(classifiers_dict[classifier], param_grid = search_parameters[classifier], error_score=0.0, n_jobs = 12)
         clf.fit(train, train_labels)
         best_parameters = clf.best_estimator_.get_params()#get parameters that worked best on cross-validation
         

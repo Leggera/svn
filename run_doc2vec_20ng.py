@@ -20,7 +20,8 @@ def get_data(subset):
     SentimentDocument = namedtuple('SentimentDocument', 'words tags split sentiment')
     newsgroups_data = fetch_20newsgroups(subset=subset, remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     docs = []
-    for news_no, news in enumerate(newsgroups_data.data):    
+    news_no = 0
+    for news in newsgroups_data.data:    
         tokens = gensim.utils.to_unicode(normalize_text(news)).split()
         
         if len(tokens) == 0:
@@ -29,6 +30,7 @@ def get_data(subset):
         split = subset
         sentiment =  newsgroups_data.target[news_no]
         tags = [subset + ' ' + 'SENT_'+ str(news_no) + " " + str(sentiment)]
+        news_no +=1
 
         docs.append(SentimentDocument(tokens, tags, split, sentiment))
     return docs
