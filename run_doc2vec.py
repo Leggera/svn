@@ -165,7 +165,6 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
                     n += ('%s ' % g[0])
                     n += ('%f\n' % g[1])
                 df.loc[p_id, epoch+1] = ''.join(n)
-            model.alpha -= alpha_delta
             print ('epoch %d' % (epoch + 1))
             #N = 1000
             dev[epoch] = cost_function(model, dev_docs, len(dev_docs))
