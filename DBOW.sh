@@ -49,7 +49,7 @@ for model in "${default_models[@]}"; do
 	    #echo $size
 	    d2v_out="doc2vec ""$model""$size"".txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
-	    (time (python3 no_cost.py   -output "$space_fold""$d2v_out" $size $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
+	    (time (python3 run_doc2vec_proper_no_cost.py   -output "$space_fold""$d2v_out" $size $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 	done
 	for alpha in "${alphas[@]}"; do
 	    delete=("-alpha 0.05")
@@ -58,7 +58,7 @@ for model in "${default_models[@]}"; do
 	    #echo $alpha
 	    d2v_out="doc2vec ""$model""$alpha"".txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
-	    (time (python3 no_cost.py  -output "$space_fold""$d2v_out" $alpha $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
+	    (time (python3 run_doc2vec_proper_no_cost.py  -output "$space_fold""$d2v_out" $alpha $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 	done
 	for window in "${windows[@]}"; do
 	    delete=("-window 10")
@@ -67,7 +67,7 @@ for model in "${default_models[@]}"; do
 	    #echo $window
 	    d2v_out="doc2vec ""$model""$window"".txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
-	    (time (python3 no_cost.py  -output "$space_fold""$d2v_out" $window $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
+	    (time (python3 run_doc2vec_proper_no_cost.py  -output "$space_fold""$d2v_out" $window $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 	done  
 	for negative in "${negatives[@]}"; do
 	    delete=("-negative 25")
@@ -76,7 +76,7 @@ for model in "${default_models[@]}"; do
 	    #echo $negative
 	    d2v_out="doc2vec ""$model""$negative"".txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
-	    (time (python3 no_cost.py -output "$space_fold""$d2v_out" $negative $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
+	    (time (python3 run_doc2vec_proper_no_cost.py -output "$space_fold""$d2v_out" $negative $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
     	done
 done
 wait
@@ -84,6 +84,6 @@ for model in "${models[@]}"; do
     d_p=${default_parameters[@]}
     d2v_out="doc2vec ""$model"".txt"
     d2v_t="$time_fold""time_""$d2v_out"
-    (time (python3 no_cost.py -output "$space_fold""$d2v_out" $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
+    (time (python3 run_doc2vec_proper_no_cost.py -output "$space_fold""$d2v_out" $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 done
 wait
