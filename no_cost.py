@@ -20,7 +20,8 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
 
 
     
-
+    infer_vecs = np.zeros((len(test_docs), size))
+    test_vectors = dict()
     train_shuffled = train_docs
     whole_duration = 0
 
@@ -38,7 +39,8 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
 
   
         for i, doc in enumerate(test_docs):
-            test_vectors[i] =  model.infer_vector(doc.words, alpha=alpha, min_alpha=0.0001, steps=25)
+            infer_vecs[i, :] = model.infer_vector(doc.words, alpha=alpha, min_alpha=0.0001, steps=25)
+            test_vectors[i] =  tuple([infer_vecs[i, :], doc.tags])
         
 
     whole_duration += elapsed()
