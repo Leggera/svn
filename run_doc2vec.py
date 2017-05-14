@@ -95,7 +95,7 @@ def cost_function(model, docs, N):
     train_error_value = 0
     
     #for each of N random documents
-    for p_id in random.sample(range(len(docs) - 1), N):
+    for p_id in random.sample(range(len(docs)), N):
 
         p_words = [word for word in docs[p_id].words if word in model.wv.vocab]
         
