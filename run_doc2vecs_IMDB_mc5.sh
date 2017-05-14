@@ -1,4 +1,3 @@
-
 #!/bin/bash
 
 function normalize_text {
