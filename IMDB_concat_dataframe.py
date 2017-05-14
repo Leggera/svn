@@ -27,7 +27,7 @@ def DocumentVectors(model, model_name):
         DocumentVectors1 = [model_w2v[w] for w in vec_vocab[25000:50000]]
     elif(model_name == "doc2vec"): #TODO
         model_d2v = Doc2Vec.load(model)    #loading saved model 
-        DocumentVectors0 = [model_d2v.docvecs['SENT_'+str(i)] for i in range(0, 25000)] #first 25000 are labeled train data
+        DocumentVectors0 = np.array([model_d2v.docvecs['SENT_'+str(i)] for i in range(0, 25000)]) #first 25000 are labeled train data
         f = open(model + 'test', 'rb')
         p = pickle.load(f)
         DocumentVectors1 = np.concatenate([p[i][0].reshape(1, -1) for i in p])
