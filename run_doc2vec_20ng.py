@@ -18,7 +18,7 @@ def normalize_text(text):
 
 def get_data(subset):
     SentimentDocument = namedtuple('SentimentDocument', 'words tags split sentiment')
-    newsgroups_data = fetch_20newsgroups(subset=subset, remove=('headers', 'footers', 'quotes'), download_if_missing=False)
+    newsgroups_data = fetch_20newsgroups(subset=subset, remove=('headers', 'footers', 'quotes'), download_if_missing=True)
     docs = []
     for news_no, news in enumerate(newsgroups_data.data):    
         tokens = gensim.utils.to_unicode(normalize_text(news)).split()

@@ -73,7 +73,8 @@ def cost(model, p, test_docs, N, len_train):
     for i in p:
         p_vec = p[i][0].reshape(1, -1)
         tag = p[i][1][0]
-        p_id = int(tag[5:].split()[0])
+        j = tag.find('SENT_')
+        p_id = int(tag[j+5:].split()[0])
         p_words = [word for word in test_docs[p_id - len_train].words if word in model.wv.vocab]#TODO 25000 = len(train_docs)
         train_error_value += func(model, p_words, p_id, N)
     #print ('%d documents %f' % (N, np.sum(train_error_value)))
