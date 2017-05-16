@@ -46,7 +46,7 @@ def Classification(classifier, C, train, train_labels, test, test_labels):
         clf.fit(train, train_labels)
         k = "C " + str(C)
     else:               #GridSearch
-        clf = GridSearchCV(classifiers_dict[classifier], cv = 10, param_grid = search_parameters[classifier], error_score=0.0, n_jobs = 30)
+        clf = GridSearchCV(classifiers_dict[classifier], cv = 5, param_grid = search_parameters[classifier], error_score=0.0, n_jobs = 30)
         clf.fit(train, train_labels)
         best_parameters = clf.best_estimator_.get_params()#get parameters that worked best on cross-validation
         
@@ -98,8 +98,8 @@ def main(space_dir, classifier, C = None):
     else: #else prepare for GridSerach
         classifiers_dict['LogReg'] = LogReg()
         classifiers_dict['LinearSVC'] = LinearSVC()
-        search_parameters['LogReg'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1)}
-        search_parameters['LinearSVC'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1)}
+        search_parameters['LogReg'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1), 'max_iter': (200, 400, 1000, 2000)}
+        search_parameters['LinearSVC'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1), 'max_iter': (200, 400, 1000, 2000)}
     
     
     
