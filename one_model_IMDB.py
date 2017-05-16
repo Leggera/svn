@@ -144,7 +144,6 @@ def main(space_dir, classifier, C = None):
                     df.set_value(index, 'cbow', '1')
                     df.set_value(index, 'sample', '1e-4')
 
-              df.set_value(index, 'implementation', implementation)
                   
               
               #load train and test vectors from PV-DM model + labels
