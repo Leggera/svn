@@ -158,7 +158,7 @@ def main(space_dir, classifier, C = None):
               y_0 = [0] * 12500
               train_labels = y_1 + y_0
               test_labels = y_1 + y_0
-              dir_name = (other_model.replace(' ','_').replace('-','')#name directory after model parameters
+              dir_name = other_model.replace(' ','_').replace('-','')#name directory after model parameters
               run_dir = './runs_IMDB_one/%s-%s/' % (dir_name, time_str())#and after starting time
               os.makedirs(run_dir, exist_ok=True) #make this directory
               #get accuracy, precision, recall, etc. and best parameters (if C was in input then it will be chosen as the best par)
