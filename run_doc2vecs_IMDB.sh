@@ -37,10 +37,10 @@ negatives=('-negative 12' '-negative 50')
 models=('-cbow 1 -sample 1e-5' '-cbow 1 -sample 1e-4' '-cbow 1 -sample 1e-3' '-cbow 0 -sample 1e-3' '-cbow 0 -sample 1e-2' '-cbow 0 -sample 1e-1')
 default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -iter 1 -threads 1 -min_count 1 -train alldata-id.txt')
 default_models=('-cbow 0 -sample 1e-2' '-cbow 1 -sample 1e-4')
-mkdir time_p2v
-time_fold="time_p2v/"
-mkdir space_p2v
-space_fold="space_p2v/"
+mkdir time_p2v_iter1
+time_fold="time_p2v_iter1/"
+mkdir space_p2v_iter1
+space_fold="space_p2v_iter1/"
 for model in "${default_models[@]}"; do
 	for size in "${sizes[@]}"; do
 	    delete=("-size 150")
