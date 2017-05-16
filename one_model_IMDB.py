@@ -148,7 +148,7 @@ def main(space_dir, classifier, C = None):
               
               #load train and test vectors from PV-DM model + labels
               try:
-                  DocumentVectors0, DocumentVectors1 = DocumentVectors(space_dir + other_model+'.txt', 'doc2vec')
+                  DocumentVectors0, DocumentVectors1 = DocumentVectors(space_dir + other_model, 'doc2vec')
               except:
                   print (other_model)#print which model causes the problem
                   traceback.print_exc(file=sys.stdout)
