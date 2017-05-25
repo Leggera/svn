@@ -47,10 +47,10 @@ default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -threads 1 -t
 default_models=('-cbow 0 -sample 1e-2' '-cbow 1 -sample 1e-4')
 min_count=('-min_count 1')
 
-mkdir time_p2v
-time_fold="time_p2v/"
-mkdir space_p2v
-space_fold="space_p2v/"
+mkdir time_d2v
+time_fold="time_d2v/"
+mkdir space_d2v
+space_fold="space_d2v/"
 for iter in "${iters[@]}";do
 for m_c in "${min_count[@]}"; do
     for model in "${default_models[@]}"; do
@@ -64,7 +64,6 @@ for m_c in "${min_count[@]}"; do
 	    (time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $iter $m_c $size $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 	    
 	done
-	wait
 	for alpha in "${alphas[@]}"; do
 	    delete=("-alpha 0.05")
 	    d_p=${default_parameters[@]/$delete}
@@ -75,7 +74,6 @@ for m_c in "${min_count[@]}"; do
 	    (time (python3 run_doc2vec_proper.py  -output "$space_fold""$d2v_out" $iter $m_c $alpha $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 	    wait
 	done
-	wait
 	for window in "${windows[@]}"; do
 	    delete=("-window 10")
 	    d_p=${default_parameters[@]/$delete}
@@ -86,7 +84,6 @@ for m_c in "${min_count[@]}"; do
 	    (time (python3 run_doc2vec_proper.py  -output "$space_fold""$d2v_out" $iter $m_c $window $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 	    wait
 	done
-	wait
 	for negative in "${negatives[@]}"; do
 	    delete=("-negative 25")
 	    d_p=${default_parameters[@]/$delete}
@@ -96,15 +93,14 @@ for m_c in "${min_count[@]}"; do
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $iter $m_c $negative $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
 	done
-	wait
     done
-    wait
     for model in "${models[@]}"; do
 	d_p=${default_parameters[@]}
 	d2v_out="doc2vec ""$model"" $m_c"" $iter"" .txt"
 	d2v_t="$time_fold""time_""$d2v_out"
 	(time (python3 run_doc2vec_proper.py -output "$space_fold""$d2v_out" $model $iter $m_c $d_p >> "$d2v_t")) &>> "$d2v_t" &
     done
-    mc-wait-for-name
+    #mc-wait-for-name
 done
 done
+wait
