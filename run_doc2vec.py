@@ -110,7 +110,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
 
     assert gensim.models.doc2vec.FAST_VERSION > -1, "this will be painfully slow otherwise"
 
-    model = Doc2Vec(dm=dm, size=size, window=window, alpha = alpha, min_alpha = alpha, negative=negative, sample=sample, workers=cores, min_count = min_count, iter = 1)
+    model = Doc2Vec(dm=dm, size=size, window=window, alpha = alpha, min_alpha = 0.0001, negative=negative, sample=sample, workers=cores, min_count = min_count, iter = 1)
     model.build_vocab(train_docs)
 
     train_shuffled = train_docs
@@ -171,8 +171,8 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
                     diagnose(diag_folder, model, counter, p_ids, neighb_num, df, dev, train, epoch, alpha, passes, train_for_cost, train_N, dev_docs, dev_vectors, dev_vecs, output)
             shuffle(train_shuffled)            
             model.train(train_shuffled, total_examples = len(train_docs), epochs = 1)
-            model.alpha = model.alpha / 2
-            model.min_alpha = model.alpha
+            #model.alpha = model.alpha / 2
+            #model.min_alpha = model.alpha
             print ('epoch %d' % (epoch + 1))
             #N = 1000
             if (diagnostics):
