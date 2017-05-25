@@ -51,9 +51,9 @@ default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -threads 1 -t
 default_models=('-cbow 0 -sample 1e-2' '-cbow 1 -sample 1e-4')
 min_count=('-min-count 1')
 
-mkdir time_p2v
+mkdir time_w2v
 time_fold="time_w2v/"
-mkdir space_p2v
+mkdir space_w2v
 space_fold="space_w2v/"
 for iter in "${iters[@]}";do
 for m_c in "${min_count[@]}"; do
