@@ -110,7 +110,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
 
     assert gensim.models.doc2vec.FAST_VERSION > -1, "this will be painfully slow otherwise"
 
-    model = Doc2Vec(dm=dm, size=size, window=window, alpha = alpha, min_alpha = 0.0001, negative=negative, sample=sample, workers=cores, min_count = min_count, iter = 1)
+    model = Doc2Vec(dm=dm, size=size, window=window, alpha = alpha, min_alpha = alpha, negative=negative, sample=sample, workers=cores, min_count = min_count, iter = 1)
     model.build_vocab(train_docs)
 
     train_shuffled = train_docs
