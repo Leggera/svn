@@ -90,7 +90,7 @@ def Classification(classifier, train, train_labels, test, test_labels):
     k = ""
     t0 = time() #start the clock
     #GridSearch
-    clf = GridSearchCV(classifiers_dict[classifier], cv = 2, param_grid = search_parameters[classifier], error_score=0.0, n_jobs = 2)
+    clf = GridSearchCV(classifiers_dict[classifier], cv = 5, param_grid = search_parameters[classifier], error_score=0.0, n_jobs = 2)
     clf.fit(train, train_labels)
     best_parameters = clf.best_estimator_.get_params()#get parameters that worked best on cross-validation
     
