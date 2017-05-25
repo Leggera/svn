@@ -82,7 +82,6 @@ for m_c in "${min_count[@]}"; do
 	    d2v_out="doc2vec ""$model"" $window"" $iter"" .txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (python3 run_doc2vec_proper.py  -output "$space_fold""$d2v_out" $iter $m_c $window $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
-	    wait
 	done
 	for negative in "${negatives[@]}"; do
 	    delete=("-negative 25")
