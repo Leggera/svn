@@ -103,3 +103,4 @@ for m_c in "${min_count[@]}"; do
     done
 done
 done
+wait
