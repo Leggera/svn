@@ -179,7 +179,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
                 diagnose(diag_folder, model, counter, p_ids, neighb_num, df, dev, train, epoch+1, alpha, passes, train_for_cost, train_N, dev_docs, dev_vectors, dev_vecs, output)
 
         for i, doc in enumerate(test_docs):
-            infer_vecs[i, :] = model.infer_vector(doc.words, alpha=alpha, min_alpha=0.0001, steps=passes)
+            infer_vecs[i, :] = model.infer_vector(doc.words, alpha=alpha, min_alpha=alpha, steps=passes)
             test_vectors[i] =  tuple([infer_vecs[i, :], doc.tags])
         
         test = cost(model, test_vectors, test_docs, len(test_docs))
@@ -228,7 +228,7 @@ def diagnose(diag_folder, model, counter, p_ids, neighb_num, df, dev, train, epo
             df.loc[str(int(p_id))+'_'+str(epoch), str(k+1)] = ''.join(n)
 
     for i, doc in enumerate(dev_docs):
-        dev_vecs[i, :] = model.infer_vector(doc.words, alpha=alpha, min_alpha=0.0001, steps=passes)
+        dev_vecs[i, :] = model.infer_vector(doc.words, alpha=alpha, min_alpha=alpha, steps=passes)
         dev_vectors[i] = tuple([dev_vecs[i, :], doc.tags])
     dev[epoch] = cost(model, dev_vectors, dev_docs, len(dev_docs))
     train[epoch] = cost_function(model, train_for_cost, train_N)
