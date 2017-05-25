@@ -53,6 +53,7 @@ for iter in "${iters[@]}";do
             (time (python3 run_doc2vec_proper.py  -output "$space_fold""$d2v_out" $iter $m_c $alpha $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
         done
 	wait
+      done
   done
 done
 wait
