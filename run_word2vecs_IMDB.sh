@@ -52,9 +52,9 @@ default_models=('-cbow 0 -sample 1e-2' '-cbow 1 -sample 1e-4')
 min_count=('-min-count 1')
 
 mkdir time_p2v
-time_fold="time_p2v/"
+time_fold="time_w2v/"
 mkdir space_p2v
-space_fold="space_p2v/"
+space_fold="space_w2v/"
 for iter in "${iters[@]}";do
 for m_c in "${min_count[@]}"; do
     for model in "${default_models[@]}"; do
@@ -63,7 +63,7 @@ for m_c in "${min_count[@]}"; do
 	    d_p=${default_parameters[@]/$delete}
 	    #echo $d_p
 	    #echo $size
-	    d2v_out="doc2vec ""$model"" $size"" $iter"" $m_c"" .txt"
+	    d2v_out="word2vec ""$model"" $size"" $iter"" $m_c"" .txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (./word2vec -output "$space_fold""$d2v_out" $iter $m_c $size $model $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &	    
 	done
@@ -72,7 +72,7 @@ for m_c in "${min_count[@]}"; do
 	    d_p=${default_parameters[@]/$delete}
 	    #echo $d_p
 	    #echo $alpha
-	    d2v_out="doc2vec ""$model"" $alpha"" $iter"" $m_c"" .txt"
+	    d2v_out="word2vec ""$model"" $alpha"" $iter"" $m_c"" .txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (./word2vec -output "$space_fold""$d2v_out" $iter $m_c $alpha $model $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &
 	done
@@ -81,7 +81,7 @@ for m_c in "${min_count[@]}"; do
 	    d_p=${default_parameters[@]/$delete}
 	    #echo $d_p
 	    #echo $window
-	    d2v_out="doc2vec ""$model"" $window"" $iter"" .txt"
+	    d2v_out="word2vec ""$model"" $window"" $iter"" .txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (./word2vec -output "$space_fold""$d2v_out" $iter $m_c $window $model $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &
 	done
@@ -90,14 +90,14 @@ for m_c in "${min_count[@]}"; do
 	    d_p=${default_parameters[@]/$delete}
 	    #echo $d_p
 	    #echo $negative
-	    d2v_out="doc2vec ""$model"" $negative"" $iter"" $m_c"" .txt"
+	    d2v_out="word2vec ""$model"" $negative"" $iter"" $m_c"" .txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (./word2vec -output "$space_fold""$d2v_out" $iter $m_c $negative $model $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &
 	done
     done
     for model in "${models[@]}"; do
 	d_p=${default_parameters[@]}
-	d2v_out="doc2vec ""$model"" $m_c"" $iter"" .txt"
+	d2v_out="word2vec ""$model"" $m_c"" $iter"" .txt"
 	d2v_t="$time_fold""time_""$d2v_out"
 	(time (./word2vec -output "$space_fold""$d2v_out" $model $iter $m_c $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &
     done
