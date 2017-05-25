@@ -72,7 +72,6 @@ for m_c in "${min_count[@]}"; do
 	    d2v_out="doc2vec ""$model"" $alpha"" $iter"" $m_c"" .txt"
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (python3 run_doc2vec_proper.py  -output "$space_fold""$d2v_out" $iter $m_c $alpha $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
-	    wait
 	done
 	for window in "${windows[@]}"; do
 	    delete=("-window 10")
