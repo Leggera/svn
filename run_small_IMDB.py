@@ -23,6 +23,8 @@ def load_data():
             elif (line_no in range(37425, 37575)):
                 split = 'extra'
                 sentiment = None
+            else:
+                continue
              # [12.5K pos, 12.5K neg]*2 then unknown
             alldocs.append(SentimentDocument(words, tags, split, sentiment))
 
