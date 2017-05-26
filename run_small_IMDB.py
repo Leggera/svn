@@ -17,10 +17,10 @@ def load_data():
             if (line_no in range(12425, 12575)):
                 split = 'train'
                 sentiment = [1.0, 0.0][line_no//12500]
-            elif (line_no in range(24925, 25075)):
+            elif (line_no in range(37425, 37575)):
                 split = 'test'
                 sentiment = [1.0, 0.0, 1.0, 0.0][line_no//12500]#
-            elif (line_no in range(37425, 37575)):
+            elif (line_no in range(62425, 62575)):
                 split = 'extra'
                 sentiment = None
             else:
