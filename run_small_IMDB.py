@@ -1,6 +1,6 @@
 import gensim
 from collections import namedtuple
-from run_doc2vec import run_doc2vec
+from run_doc2vec_small import run_doc2vec
 import argparse
 
 def load_data():
@@ -74,4 +74,4 @@ if __name__ == "__main__":
     train_docs, dev_docs, test_docs, alldocs = load_data()
     print('%d docs: %d train, %d dev, %d test' % (len(alldocs), len(train_docs), len(dev_docs), len(test_docs)))
     #cores = multiprocessing.cpu_count()
-    run_doc2vec_small(train_docs, dev_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output, diagnostics = True)
+    run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output, diagnostics = True)
