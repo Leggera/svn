@@ -60,7 +60,7 @@ def main(corpora, p2v_dir, p2v_file, diag_dir, epoch):
         y_0 = [0] * (12500 - dev)
         train_labels = y_1 + y_0
 
-        test_labels = [0] * dev + [1] * dev            
+        test_labels = [1] * dev + [0] * dev            
     else:
         p2v_DocumentVectors0 = np.array([p2v_model.docvecs[tag] for tag in p2v_model.docvecs.doctags if 'train' in tag])
         test_labels = [p[i][1][0].split()[2] for i in p]
