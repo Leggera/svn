@@ -14,13 +14,13 @@ def load_data():
             tokens = gensim.utils.to_unicode(line).split()
             words = tokens[1:]
             tags = ['SENT_'+ str(line_no)] # `tags = [tokens[0]]` would also work at extra memory cost
-            if (line_no in range(12425, 12575)):
+            if (line_no in range(12025, 12975)):
                 split = 'train'
                 sentiment = [1.0, 0.0][line_no//12500]
-            elif (line_no in range(37425, 37575)):
+            elif (line_no in range(37025, 37975)):
                 split = 'test'
                 sentiment = [1.0, 0.0, 1.0, 0.0][line_no//12500]#
-            elif (line_no in range(62425, 62575)):
+            elif (line_no in range(62025, 62975)):
                 split = 'extra'
                 sentiment = None
             else:
@@ -30,8 +30,8 @@ def load_data():
 
     train_docs = [doc for doc in alldocs if (doc.split == 'train' or doc.split == 'extra')]
     test_docs = [doc for doc in alldocs if doc.split == 'test']
-    d1 = 65
-    d2 = 85
+    d1 = 405
+    d2 = 545
     return train_docs[:d1] + train_docs[d2:], train_docs[d1:d2], test_docs, alldocs
 
 if __name__ == "__main__":
