@@ -220,6 +220,15 @@ def diagnose(diag_folder, model, counter, p_ids, neighb_num, df, dev, train, epo
                 n += ('%s ' % g[0])
                 n += ('%f' % g[1])
                 df.loc[word + '_'+ str(epoch), str(k+1)] = ''.join(n)
+                
+    for (word, count) in (counter.most_common()[-31:-1]):
+        if (word not in string.punctuation):     
+            
+            for k, g in enumerate(model.wv.most_similar(word, topn=neighb_num)):
+                n = []
+                n += ('%s ' % g[0])
+                n += ('%f' % g[1])
+                df.loc[word + '_'+ str(epoch), str(k+1)] = ''.join(n)
             
     for p_id in p_ids:
         
