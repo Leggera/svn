@@ -53,6 +53,7 @@ for iter in "${iters[@]}";do
             d2v_t="$time_fold""time_""$d2v_out"
             (time (python3 run_small_IMDB.py -output "$space_fold""$d2v_out" $iter $m_c $alpha $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
         done
+	wait
       done
   done
 done
