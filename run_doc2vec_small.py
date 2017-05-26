@@ -18,10 +18,12 @@ import subprocess
 def func(model, p_words, p_vec, N):
 
     train_error_value = 0
-    if (len(p_words) < model.window):
+    l = len(p_words)
+    if (l < model.window):
         context_words = p_words
-    else:    
-        context_words = random.sample(p_words, model.window)
+    else:
+        n = random.randint(0, l - model.window)
+        context_words = p_words[n:n+model.window]
     c = []
     for word in context_words:
         c.append(model.wv.vocab[word])
