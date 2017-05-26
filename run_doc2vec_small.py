@@ -150,7 +150,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
 
         dev = np.zeros(passes+1)
         train = np.zeros(passes+1)
-        train_N = 3000
+        train_N = 30
         train_ids_for_cost = np.linspace(0, len(train_docs) - 1, num = train_N)
         train_for_cost = []
         for i in train_ids_for_cost:
