@@ -55,7 +55,7 @@ def main(corpora, p2v_dir, p2v_file, diag_dir, epoch):
     p = pickle.load(f)
     if ('IMDB' in corpora):
         dev = 10
-        p2v_DocumentVectors0 = np.array([p2v_model.docvecs['SENT_'+str(i)] for i in range(12425, 12575 - dev)] + [p2v_model.docvecs['SENT_'+str(i)] for i in range(24925+dev, 25075)])
+        p2v_DocumentVectors0 = np.array([p2v_model.docvecs['SENT_'+str(i)] for i in range(12425, 12500 - dev)] + [p2v_model.docvecs['SENT_'+str(i)] for i in range(12500 + dev, 12575)])
         y_1 = [1] * (75 - dev)
         y_0 = [0] * (75 - dev)
         train_labels = y_1 + y_0
