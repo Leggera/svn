@@ -30,8 +30,8 @@ def load_data():
 
     train_docs = [doc for doc in alldocs if (doc.split == 'train' or doc.split == 'extra')]
     test_docs = [doc for doc in alldocs if doc.split == 'test']
-    d1 = 140
-    d2 = 160
+    d1 = 65
+    d2 = 85
     return train_docs[:d1] + train_docs[d2:], train_docs[d1:d2], test_docs, alldocs
 
 if __name__ == "__main__":
