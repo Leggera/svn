@@ -178,7 +178,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, alpha1
                 else:
                   model.alpha = alpha
             if (dm == 1): 
-              if (epochs+1 == 1):
+              if (epoch+1 == 1):
                   model.alpha = alpha1
               else:
                   model.alpha = alpha
