@@ -43,7 +43,8 @@ if __name__ == "__main__":
     parser.add_argument("-negative", nargs='?', default='25', help = 'number of negative samples')
     parser.add_argument("-sample", nargs='?', default='1e-4', help = 'downsampling')
     parser.add_argument("-iter", nargs='?', default='25', help = 'number of epochs')
-    parser.add_argument("-alpha", nargs='?', default='0.05', help = 'initial learning rate')
+    parser.add_argument("-alpha", nargs='?', default='0.05', help = 'next learning rate')
+    parser.add_argument("-alpha1", nargs='?', default='0.05', help = 'initial learning rate')
     parser.add_argument("-output", help = 'file to save trained model to')
     parser.add_argument("-threads", nargs='?', default='4', help = 'number of parallel processes')
     parser.add_argument("-min_count", nargs='?', default='5', help = 'minimal word frequency threshold')
@@ -66,6 +67,7 @@ if __name__ == "__main__":
     negative = int(args.negative)
     sample = float(args.sample)
     alpha = float(args.alpha)
+    alpha1 = float(args.alpha1)
     passes = int(args.iter)
     cores = int(args.threads)
     
@@ -74,4 +76,4 @@ if __name__ == "__main__":
     train_docs, dev_docs, test_docs, alldocs = load_data()
     print('%d docs: %d train, %d dev, %d test' % (len(alldocs), len(train_docs), len(dev_docs), len(test_docs)))
     #cores = multiprocessing.cpu_count()
-    run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negative, sample, cores, min_count, passes, output, diagnostics = True)
+    run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, alpha1, negative, sample, cores, min_count, passes, output, diagnostics = True)
