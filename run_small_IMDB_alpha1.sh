@@ -34,7 +34,7 @@ alphas=('-alpha 0.005' '-alpha 0.01' '-alpha 0.03' '-alpha 0.05'
 '-alpha 0.07' '-alpha 0.1' '-alpha 0.2' '-alpha 0.3' '-alpha 0.5' '-alpha 0.7' '-alpha 1.0')
 default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -threads 1 -train alldata-id.txt')
 default_models=('-cbow 0 -sample 1e-2' '-cbow 1 -sample 1e-4')
-iters=('-iter 150')
+iters=('-iter 50')
 min_count=('-min_count 1')
 
 mkdir time_d2v
