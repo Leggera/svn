@@ -44,8 +44,8 @@ space_fold="space_d2v/"
 for iter in "${iters[@]}";do
   for m_c in "${min_count[@]}"; do
       for model in "${default_models[@]}"; do
-      for alpha1 in "${alphas1[@]}"; do
-        for alpha in "${alphas[@]}"; do
+      	for alpha1 in "${alphas1[@]}"; do
+          for alpha in "${alphas[@]}"; do
             delete=("-alpha 0.05")
             d_p=${default_parameters[@]/$delete}
             #echo $d_p
@@ -53,8 +53,9 @@ for iter in "${iters[@]}";do
             d2v_out="doc2vec ""$model"" $alpha"" $alpha1"" $iter"" $m_c"" .txt"
             d2v_t="$time_fold""time_""$d2v_out"
             (time (python3 run_small_IMDB_alpha1.py -output "$space_fold""$d2v_out" $iter $m_c $alpha $alpha1 $model $d_p >> "$d2v_t")) &>> "$d2v_t" &
-        done
-	    wait
+          done
+     	done
+     	wait
       done
   done
 done
