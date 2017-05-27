@@ -172,7 +172,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, alpha1
                 if (epoch == 0):
                     diagnose(diag_folder, model, counter, p_ids, neighb_num, df, dev, train, epoch, alpha, passes, train_for_cost, train_N, dev_docs, dev_vectors, dev_vecs, output)
             shuffle(train_shuffled)
-            if (dm == 0)
+            if (dm == 0):
                 if (epoch+1 < 4):
                   model.alpha = alpha1
                 else:
