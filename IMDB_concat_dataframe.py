@@ -29,7 +29,7 @@ def DocumentVectors(model, model_name):
         DocumentVectors1 = [model_w2v[w] for w in vec_vocab[25000:50000]]
     elif(model_name == "doc2vec"): #TODO
         model_d2v = Doc2Vec.load(model)    #loading saved model 
-        DocumentVectors0 = np.array([model_d2v.docvecs['SENT_'+str(i)] for i in range(0, 25000)]) #first 25000 are labeled train data
+        DocumentVectors0 = np.array([model_d2v.docvecs['SENT_'+str(i)] for i in range(0, d1)]+[model_d2v.docvecs['SENT_'+str(i)] for i in range(d2, 25000)]) #first 25000 are labeled train data
         f = open(model + 'test', 'rb')
         p = pickle.load(f)
         DocumentVectors1 = np.concatenate([p[i][0].reshape(1, -1) for i in p])
@@ -48,7 +48,7 @@ def Classification(classifier, C, train, train_labels, test, test_labels):
         clf.fit(train, train_labels)
         k = "C " + str(C)
     else:               #GridSearch
-        clf = GridSearchCV(classifiers_dict[classifier], param_grid = search_parameters[classifier], error_score=0.0, n_jobs = 30)
+        clf = GridSearchCV(classifiers_dict[classifier], param_grid = search_parameters[classifier], error_score=0.0, n_jobs = -1)
         clf.fit(train, train_labels)
         best_parameters = clf.best_estimator_.get_params()#get parameters that worked best on cross-validation
         
@@ -200,6 +200,9 @@ def main(space_dir, classifier, C = None):
                             y_1 = [1] * 12500
                             y_0 = [0] * 12500
                             train_labels = y_1 + y_0
+                            d1 = 12000
+                            d2 = 13000
+                            train_labels = train_labels[:d1] + train_labels[d2:]
                             test_labels = y_1 + y_0
                             dir_name = (other_model + ''.join(samples)).replace(' ','_').replace('-','')#name directory after model parameters
                             run_dir = './runs_IMDB/%s-%s/' % (dir_name, time_str())#and after starting time
