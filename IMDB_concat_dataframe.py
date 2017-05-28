@@ -19,11 +19,13 @@ import pickle
 def DocumentVectors(model, model_name):
 
     """ Load paragraph2vec vectors"""
+    d1 = 12000
+    d2 = 13000
     if (model_name == "word2vec_c"):
         model_w2v = gensim.models.Doc2Vec.load_word2vec_format(model , binary=False)
         vec_vocab = [w for w in model_w2v.vocab if "_*" in w]
         vec_vocab = sorted(vec_vocab, key = lambda x: int(x[2:]))
-        DocumentVectors0 = [model_w2v[w] for w in vec_vocab[:25000]]
+        DocumentVectors0 = [model_w2v[w] for w in (vec_vocab[:d1] + vec_vocab[d2:25000])]
         DocumentVectors1 = [model_w2v[w] for w in vec_vocab[25000:50000]]
     elif(model_name == "doc2vec"): #TODO
         model_d2v = Doc2Vec.load(model)    #loading saved model 
