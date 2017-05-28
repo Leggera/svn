@@ -115,8 +115,8 @@ if __name__ == "__main__":
     default_parameters = dict()
     classifiers_dict['LogReg'] = LogReg()
     classifiers_dict['LinearSVC'] = LinearSVC()
-    search_parameters['LogReg'] = {'C': (3*10**-3, 3*10**-2, 3*10**-1)}
-    search_parameters['LinearSVC'] = {'C': (3*10**-3, 3*10**-2, 3*10**-1)}
+    search_parameters['LogReg'] = {'C': (3*10**-3, 10**-2, 3*10**-2, 3*10**-1)}
+    search_parameters['LinearSVC'] = {'C': (3*10**-3, 10**-2, 3*10**-2, 3*10**-1)}
 
     d0 = ['implementation', 'epoch']
     columns = ['cbow', 'size', 'alpha', 'window', 'negative', 'sample', 'min_count']
