@@ -80,8 +80,8 @@ def main(space_dir, classifier, C = None):
     
     #future DataFrame fields
     d0 = ['implementation']
-    parameters = ['size', 'alpha', 'window', 'negative', 'min_count']
-    columns = ['size', 'alpha', 'window', 'negative', 'cbow0_sample', 'cbow1_sample', 'min_count']
+    parameters = ['size', 'alpha', 'window', 'negative', 'min_count', 'iter']
+    columns = ['size', 'alpha', 'window', 'negative', 'cbow0_sample', 'cbow1_sample', 'min_count', 'iter']
     best_params = ['best_parameters']
     classifiers = ['LogReg', 'LinearSVC']
     
@@ -91,6 +91,7 @@ def main(space_dir, classifier, C = None):
     default_parameters['window'] = 10
     default_parameters['negative'] = 25
     default_parameters['min_count'] = 1
+    default_parameters['iter'] = 'wtf'
 
     if (C is not None): #if C was given as an input value then initialize classifier with it
         classifiers_dict['LogReg'] = LogReg(C = C)
