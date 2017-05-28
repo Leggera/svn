@@ -31,10 +31,10 @@ awk 'BEGIN{a=0;}{print "_*" a " " $0; a++;}' < alldata.txt > alldata-id.txt
 
 
 #sizes=('-size 75' '-size 300')
-alphas=('-alpha 0.03' '-alpha 0.2' '-alpha 0.3')
+alphas=('-alpha 0.02')
 #windows=('-window 5' '-window 20')
 #negatives=('-negative 12' '-negative 50')
-iters=('-iter 50')
+iters=('-iter 150')
 
 #models=('-cbow 1 -sample 1e-5' '-cbow 1 -sample 1e-4' '-cbow 1 -sample 1e-3' '-cbow 1 -sample 1e-2'
 #	'-cbow 0 -sample 1e-4' '-cbow 0 -sample 1e-3' '-cbow 0 -sample 1e-2' '-cbow 0 -sample 1e-1')
