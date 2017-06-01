@@ -33,9 +33,9 @@ awk 'BEGIN{a=0;}{print "_*" a " " $0; a++;}' < alldata.txt > alldata-id.txt
 #alphas1=('-alpha 0.01' '-alpha 0.02' '-alpha 0.03' '-alpha 0.04' '-alpha 0.05' '-alpha 0.06')
 #alphas2=('-alpha 0.07' '-alpha 0.08' '-alpha 0.09' '-alpha 0.1' '-alpha 0.15' '-alpha 0.2')
 default_parameters=('-size 150 -window 10 -negative 25 -threads 1 -train alldata-id.txt')
-default_models=('-cbow 1 -sample 1e-4 -alpha 0.07' '-cbow 1 -sample 1e-4 -alpha 0.2' '-cbow 1 -sample 1e-4 -alpha 0.6'
-'-cbow 0 -sample 1e-2 -alpha 0.017' '-cbow 0 -sample 1e-2 -alpha 0.05' '-cbow 0 -sample 1e-2 -alpha 0.15'
-'-cbow 0 -sample 1e-2 -alpha 0.03' '-cbow 0 -sample 1e-2 -alpha 0.09' '-cbow 0 -sample 1e-2 -alpha 0.27'
+default_models1=('-cbow 1 -sample 1e-4 -alpha 0.07' '-cbow 1 -sample 1e-4 -alpha 0.2' '-cbow 1 -sample 1e-4 -alpha 0.6'
+'-cbow 0 -sample 1e-2 -alpha 0.017' '-cbow 0 -sample 1e-2 -alpha 0.05' '-cbow 0 -sample 1e-2 -alpha 0.15')
+default_models2=('-cbow 0 -sample 1e-2 -alpha 0.03' '-cbow 0 -sample 1e-2 -alpha 0.09' '-cbow 0 -sample 1e-2 -alpha 0.27'
 '-cbow 0 -sample 1e-2 -alpha 0.007' '-cbow 0 -sample 1e-2 -alpha 0.02' '-cbow 0 -sample 1e-2 -alpha 0.06')
 iters=('-iter 25')
 min_count=('-min_count 1')
@@ -46,7 +46,13 @@ mkdir space_d2v
 space_fold="space_d2v/"
 for iter in "${iters[@]}";do
   for m_c in "${min_count[@]}"; do
-      for model in "${default_models[@]}"; do
+      for model in "${default_models1[@]}"; do
+	d2v_out="doc2vec ""$model"" $iter"" $m_c"" .txt"
+	d2v_t="$time_fold""time_""$d2v_out"
+	(time (python3 run_doc2vec_proper.py  -output "$space_fold""$d2v_out" $iter $m_c $model $default_parameters >> "$d2v_t")) &>> "$d2v_t" &
+      done
+      wait
+      for model in "${default_models2[@]}"; do
 	d2v_out="doc2vec ""$model"" $iter"" $m_c"" .txt"
 	d2v_t="$time_fold""time_""$d2v_out"
 	(time (python3 run_doc2vec_proper.py  -output "$space_fold""$d2v_out" $iter $m_c $model $default_parameters >> "$d2v_t")) &>> "$d2v_t" &
