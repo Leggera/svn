@@ -246,7 +246,6 @@ def diagnose(diag_folder, model, counter, p_ids, neighb_num, df, dev, train, epo
     pickle.dump(dev_vectors, tmp_f)
     i = output.find('/')
     subprocess.call(['python3', 'IMDB_dataframe.py', 'IMDB' , 'temp' + output[:i+1] , output[i+1:], diag_folder, str(epoch)])
-    subprocess.call(['python3', 'IMDB_concat_dataframe.py', '-vectors', 'temp' + output[:i+1] , '-classifier', 'linearsvc'])
     print (dev[epoch])
     print (train[epoch])
     sort_df = df.sort_index()
