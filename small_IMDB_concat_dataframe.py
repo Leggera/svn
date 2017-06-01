@@ -79,7 +79,7 @@ def main(space_dir, classifier, C = None):
     
     #future DataFrame fields
     d0 = ['implementation']
-    parameters = ['size', 'alpha', 'window', 'negative', 'min_count', 'iter']
+    parameters = ['size', 'window', 'negative', 'min_count', 'iter']
     columns = ['size', 'alpha', 'window', 'negative', 'cbow0_sample', 'cbow1_sample', 'min_count', 'iter']
     best_params = ['best_parameters']
     classifiers = ['LogReg', 'LinearSVC']
@@ -175,6 +175,20 @@ def main(space_dir, classifier, C = None):
                                 df.set_value(index, 'cbow1_sample', value)
                             else:
                                 df.set_value(index, 'cbow1_sample', '1e-4')
+
+                            i = string.find('alpha')
+                            if (i != -1):
+                                value = string[i:].split()[1]
+                                df.set_value(index, 'alpha', value)
+                            else:
+                                df.set_value(index, 'alpha', '0.05')
+
+                            i = other_model.find('alpha')
+                            if (i != -1):
+                                value = other_model[i:].split()[1]
+                                df.set_value(index, 'alpha', value)
+                            else:
+                                df.set_value(index, 'alpha', '0.05')
 
                             #load train and test vectors from PV-DBOW model + labels
                             try:
