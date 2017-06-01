@@ -30,10 +30,9 @@ cat ./data/full-train-pos.txt ./data/full-train-neg.txt ./data/test-pos.txt ./da
 awk 'BEGIN{a=0;}{print "_*" a " " $0; a++;}' < alldata.txt > alldata-id.txt
 
 
-alphas=('-alpha 0.01' '-alpha 0.03' '-alpha 0.05'
-'-alpha 0.07' '-alpha 0.1' '-alpha 0.2' '-alpha 0.3' '-alpha 0.5' '-alpha 0.7' '-alpha 1.0')
+alphas=('-alpha 0.00001' '-alpha 0.00005' '-alpha 0.0001' '-alpha 0.0005' '-alpha 0.001' '-alpha 0.005')
 default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -threads 1 -train alldata-id.txt')
-default_models=('-cbow 0 -sample 1e-2' '-cbow 1 -sample 1e-4')
+default_models=('-cbow 1 -sample 1e-4')
 iters=('-iter 150')
 min_count=('-min_count 1')
 
