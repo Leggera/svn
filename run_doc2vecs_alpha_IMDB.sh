@@ -34,9 +34,9 @@ awk 'BEGIN{a=0;}{print "_*" a " " $0; a++;}' < alldata.txt > alldata-id.txt
 #alphas2=('-alpha 0.07' '-alpha 0.08' '-alpha 0.09' '-alpha 0.1' '-alpha 0.15' '-alpha 0.2')
 default_parameters=('-size 150 -window 10 -negative 25 -threads 1 -train alldata-id.txt')
 default_models1=('-cbow 1 -sample 1e-4 -alpha 0.07' '-cbow 1 -sample 1e-4 -alpha 0.2' '-cbow 1 -sample 1e-4 -alpha 0.6'
-'-cbow 0 -sample 1e-2 -alpha 0.017' '-cbow 0 -sample 1e-2 -alpha 0.05' '-cbow 0 -sample 1e-2 -alpha 0.15')
-default_models2=('-cbow 0 -sample 1e-2 -alpha 0.03' '-cbow 0 -sample 1e-2 -alpha 0.09' '-cbow 0 -sample 1e-2 -alpha 0.27'
-'-cbow 0 -sample 1e-2 -alpha 0.007' '-cbow 0 -sample 1e-2 -alpha 0.02' '-cbow 0 -sample 1e-2 -alpha 0.06')
+'-cbow 0 -sample 1e-2 -alpha 0.017' '-cbow 0 -sample 1e-2 -alpha 0.05' '-cbow 0 -sample 1e-2 -alpha 0.15'
+'-cbow 0 -sample 1e-2 -alpha 0.03' '-cbow 0 -sample 1e-2 -alpha 0.09' '-cbow 0 -sample 1e-2 -alpha 0.27')
+default_models2=('-cbow 0 -sample 1e-2 -alpha 0.007' '-cbow 0 -sample 1e-2 -alpha 0.02' '-cbow 0 -sample 1e-2 -alpha 0.06')
 iters=('-iter 25')
 min_count=('-min_count 1')
 
