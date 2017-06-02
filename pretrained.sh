@@ -51,13 +51,13 @@ for iter in "${iters[@]}";do
       for model in "${default_models1[@]}"; do
 	d2v_out="doc2vec ""$model"" $iter"" $m_c"" .txt"
 	d2v_t="$time_fold""time_""$d2v_out"
-	(time (python3 pretrained_doc2vec.py  -output "$space_fold""$d2v_out" $iter $m_c $model $default_parameters >> "$d2v_t")) &>> "$d2v_t" &
+	(time (python3 IMDB_pretrained_doc2vec.py  -output "$space_fold""$d2v_out" $iter $m_c $model $default_parameters >> "$d2v_t")) &>> "$d2v_t" &
       done
       wait
       for model in "${default_models2[@]}"; do
 	d2v_out="doc2vec ""$model"" $iter"" $m_c"" .txt"
 	d2v_t="$time_fold""time_""$d2v_out"
-	(time (python3 pretrained_doc2vec.py  -output "$space_fold""$d2v_out" $iter $m_c $model $default_parameters >> "$d2v_t")) &>> "$d2v_t" &
+	(time (python3 IMDB_pretrained_doc2vec.py  -output "$space_fold""$d2v_out" $iter $m_c $model $default_parameters >> "$d2v_t")) &>> "$d2v_t" &
       done
   done
 done
