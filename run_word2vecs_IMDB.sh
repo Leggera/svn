@@ -47,7 +47,7 @@ models=('-cbow 1 -sample 1e-5' '-cbow 1 -sample 1e-4' '-cbow 1 -sample 1e-3' '-c
 #windows=('-window 1' '-window 2')
 #negatives=('-negative 1' '-negative 2')
 #iters=('-iter 2')
-default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -threads 1 -train alldata-id.txt')
+default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -threads 12 -train alldata-id.txt')
 default_models=('-cbow 0 -sample 1e-2' '-cbow 1 -sample 1e-4')
 min_count=('-min-count 1')
 
@@ -67,6 +67,7 @@ for m_c in "${min_count[@]}"; do
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (./word2vec -output "$space_fold""$d2v_out" $iter $m_c $size $model $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &	    
 	done
+	wait
 	for alpha in "${alphas[@]}"; do
 	    delete=("-alpha 0.05")
 	    d_p=${default_parameters[@]/$delete}
@@ -76,6 +77,7 @@ for m_c in "${min_count[@]}"; do
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (./word2vec -output "$space_fold""$d2v_out" $iter $m_c $alpha $model $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &
 	done
+	wait
 	for window in "${windows[@]}"; do
 	    delete=("-window 10")
 	    d_p=${default_parameters[@]/$delete}
@@ -85,6 +87,7 @@ for m_c in "${min_count[@]}"; do
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (./word2vec -output "$space_fold""$d2v_out" $iter $m_c $window $model $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &
 	done
+	wait
 	for negative in "${negatives[@]}"; do
 	    delete=("-negative 25")
 	    d_p=${default_parameters[@]/$delete}
@@ -94,6 +97,7 @@ for m_c in "${min_count[@]}"; do
 	    d2v_t="$time_fold""time_""$d2v_out"
 	    (time (./word2vec -output "$space_fold""$d2v_out" $iter $m_c $negative $model $d_p -binary 0 -sentence-vectors 1 >> "$d2v_t")) &>> "$d2v_t" &
 	done
+	wait
     done
     for model in "${models[@]}"; do
 	d_p=${default_parameters[@]}
