@@ -192,18 +192,16 @@ def main(space_dir, classifier, C = None):
                                 df.set_value(index, 'alpha1', '0.05')
                                 
                             i = string.find('iter')
+                            j = other_model.find('iter')
                             if (i != -1):
-                                value = string[i:].split()[1]
-                                df.set_value(index, 'iter0', value)
-                            else:
-                                df.set_value(index, 'iter0', 'wtf')
-
-                            i = other_model.find('iter')
-                            if (i != -1):
-                                value = other_model[i:].split()[1]
-                                df.set_value(index, 'iter1', value)
-                            else:
-                                df.set_value(index, 'iter1', 'wtf')
+                                value0 = string[i:].split()[1]
+                                if (j != -1):
+                                    value1 = other_model[i:].split()[1]
+                                    if (int(value0) != int(value1)):
+                                        df.set_value(index, 'iter0', value0)
+                                        df.set_value(index, 'iter1', value1)
+                                    else:
+                                        continue
                             #load train and test vectors from PV-DBOW model + labels
                             try:
                                 DocumentVectors0_0, DocumentVectors1_0 = DocumentVectors(space_dir + model, implementation)
