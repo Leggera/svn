@@ -34,9 +34,9 @@ cat ./data/full-train-pos.txt ./data/full-train-neg.txt ./data/test-pos.txt ./da
 awk 'BEGIN{a=0;}{print "_*" a " " $0; a++;}' < alldata.txt > alldata-id.txt
 
 
-sizes=('-size 75')
+sizes=('-size 75' '-size 300')
 alphas=('-alpha 0.025' '-alpha 0.1')
-windows=('-window 5')
+windows=('-window 5' '-window 20')
 negatives=('-negative 12' '-negative 50')
 iters=('-iter 25')
 
