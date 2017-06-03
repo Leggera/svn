@@ -1,8 +1,8 @@
 #!/bin/bash
-git clone https://github.com/mesnilgr/iclr15.git
+#git clone https://github.com/mesnilgr/iclr15.git
 
-cp iclr15/scripts/word2vec.c .
-gcc word2vec.c -o word2vec -lm -pthread -O3 -march=native -funroll-loops
+#cp iclr15/scripts/word2vec.c .
+#gcc word2vec.c -o word2vec -lm -pthread -O3 -march=native -funroll-loops
 
 function normalize_text {
   awk '{print tolower($0);}' < $1 | sed -e 's/\./ \. /g' -e 's/<br \/>/ /g' -e 's/"/ " /g' \
