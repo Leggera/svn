@@ -16,6 +16,7 @@ import sys
 import traceback
 import pickle
 from sklearn.preprocessing import scale
+from sklearn import svm
 
 def DocumentVectors(model, model_name):
 
@@ -98,13 +99,15 @@ def main(space_dir, classifier, C = None):
         classifiers_dict['LogReg'] = LogReg(C = C)
         #classifiers_dict['SklearnMLP'] = MLPClassifier(hidden_layer_sizes = (50, 50), max_iter=1000)
         classifiers_dict['LinearSVC'] = LinearSVC(C = C)
+        
         #classifiers_dict['StatModelsLogReg'] = sm.Logit()
     else: #else prepare for GridSerach
         classifiers_dict['LogReg'] = LogReg()
         classifiers_dict['LinearSVC'] = LinearSVC()
+        classifiers_dict['SVC']=svm.SVC()
         search_parameters['LogReg'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1), 'max_iter': (200, 400, 1000, 2000)}
         search_parameters['LinearSVC'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1), 'max_iter': (200, 400, 1000, 2000)}
-    
+        search_parameters['SVC'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1), 'max_iter': (200, 400, 1000, 2000)}
     
     
     
@@ -247,7 +250,7 @@ if __name__ == "__main__":
     
     parser.add_argument("-vectors", nargs='?', default='space_p2v/', help = 'paragraph2vec vectors directory')
     
-    parser.add_argument("-classifier", choices=['lr','linearsvc'], help = 'classifier name (lr or linearsvc)')
+    parser.add_argument("-classifier", choices=['lr','linearsvc', 'svc'], help = 'classifier name (lr or linearsvc)')
     
     parser.add_argument("-C", nargs='?', default='None', help = 'regularization parameter')
     
@@ -263,6 +266,8 @@ if __name__ == "__main__":
         classifier = 'LogReg'
     elif (args.classifier == 'linearsvc'):
         classifier = 'LinearSVC'
+    else:
+        classifier = 'SVC'
     C = args.C
     if (C is not 'None'):
         C = float(C)
