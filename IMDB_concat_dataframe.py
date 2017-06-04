@@ -81,8 +81,8 @@ def main(space_dir, classifier, C = None):
     
     #future DataFrame fields
     d0 = ['implementation']
-    parameters = ['size', 'window', 'negative', 'min_count']
-    columns = ['size', 'alpha0', 'alpha1', 'window', 'negative', 'cbow0_sample', 'cbow1_sample', 'min_count', 'iter0', 'iter1']
+    parameters = ['size', 'window', 'negative', 'min-count']
+    columns = ['size', 'alpha0', 'alpha1', 'window', 'negative', 'cbow0_sample', 'cbow1_sample', 'min-count', 'iter0', 'iter1']
     best_params = ['best_parameters']
     classifiers = ['LogReg', 'LinearSVC']
     
