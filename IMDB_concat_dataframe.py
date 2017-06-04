@@ -22,7 +22,7 @@ def DocumentVectors(model, model_name):
     """ Load paragraph2vec vectors"""
     d1 = 12000
     d2 = 13000
-    if (model_name == "word2vec_c"):
+    if (model_name == "word2vec"):
         model_w2v = gensim.models.Doc2Vec.load_word2vec_format(model , binary=False)
         vec_vocab = [w for w in model_w2v.vocab if "_*" in w]
         vec_vocab = sorted(vec_vocab, key = lambda x: int(x[2:]))
