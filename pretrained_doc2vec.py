@@ -113,6 +113,7 @@ def run_doc2vec(train_docs, dev_docs, test_docs, dm, size, window, alpha, negati
     #model = Doc2Vec(dm=dm, size=size, window=window, alpha = alpha, min_alpha = alpha, negative=negative, sample=sample, workers=cores, min_count = min_count, iter = 1)
     #model.build_vocab(train_docs)
     model = Doc2Vec.load(output)
+    model.workers = cores
     output = output.replace('iter 50', 'iter 75')
     train_shuffled = train_docs
     
