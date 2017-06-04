@@ -47,7 +47,7 @@ models=('-cbow 1 -sample 1e-5' '-cbow 1 -sample 1e-4' '-cbow 1 -sample 1e-3' '-c
 #windows=('-window 1' '-window 2')
 #negatives=('-negative 1' '-negative 2')
 #iters=('-iter 2')
-default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -threads 12 -train alldata-id.txt')
+default_parameters=('-size 150 -alpha 0.05 -window 10 -negative 25 -threads 24 -train alldata-id.txt')
 default_models=('-cbow 1 -sample 1e-4')
 min_count=('-min-count 1')
 
