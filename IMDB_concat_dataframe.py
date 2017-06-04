@@ -104,10 +104,10 @@ def main(space_dir, classifier, C = None):
     else: #else prepare for GridSerach
         classifiers_dict['LogReg'] = LogReg()
         classifiers_dict['LinearSVC'] = LinearSVC()
-        classifiers_dict['SVC']=svm.SVC()
+        classifiers_dict['SVC']=svm.SVC(max_iter = -1)
         search_parameters['LogReg'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1), 'max_iter': (200, 400, 1000, 2000)}
         search_parameters['LinearSVC'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1), 'max_iter': (200, 400, 1000, 2000)}
-        search_parameters['SVC'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1), 'max_iter': (200, 400, 1000, 2000)}
+        search_parameters['SVC'] = {'C': (10**-5, 3*10**-5, 10**-4, 3*10**-4, 10**-3, 3*10**-3,10**-2, 3*10**-2,10**-1, 3*10**-1, 1)}
     
     
     
