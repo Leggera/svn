@@ -91,7 +91,7 @@ def main(space_dir, classifier, C = None):
     default_parameters['alpha'] = 0.05
     default_parameters['window'] = 10
     default_parameters['negative'] = 25
-    default_parameters['min_count'] = 1
+    default_parameters['min-count'] = 1
     default_parameters['iter'] = 'wtf'
 
     if (C is not None): #if C was given as an input value then initialize classifier with it
