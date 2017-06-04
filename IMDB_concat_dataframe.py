@@ -15,6 +15,7 @@ from datetime import datetime
 import sys
 import traceback
 import pickle
+from sklearn.preprocessing import scale
 
 def DocumentVectors(model, model_name):
 
@@ -217,10 +218,10 @@ def main(space_dir, classifier, C = None):
 
                             #concatenate PV-DBOW and PV-DM train models
                             
-                            DocumentVectors0 = np.concatenate((DocumentVectors0_0, DocumentVectors0_1), axis=1)
+                            DocumentVectors0 = scale(np.concatenate((DocumentVectors0_0, DocumentVectors0_1), axis=1))
                             
                             #concatenate PV-DBOW and PV-DM test models
-                            DocumentVectors1 = np.concatenate((DocumentVectors1_0, DocumentVectors1_1), axis=1)
+                            DocumentVectors1 = scale(np.concatenate((DocumentVectors1_0, DocumentVectors1_1), axis=1))
                             y_1 = [1] * 12500
                             y_0 = [0] * 12500
                             train_labels = y_1 + y_0
