@@ -23,7 +23,7 @@ def DocumentVectors(model, model_name):
     d1 = 12000
     d2 = 13000
     if (model_name == "word2vec"):
-        model_w2v = gensim.models.Doc2Vec.load_word2vec_format(model , binary=False)
+        model_w2v = gensim.models.KeyedVectors.load_word2vec_format(model , binary=False)
         vec_vocab = [w for w in model_w2v.vocab if "_*" in w]
         vec_vocab = sorted(vec_vocab, key = lambda x: int(x[2:]))
         DocumentVectors0 = [model_w2v[w] for w in (vec_vocab[:d1] + vec_vocab[d2:25000])]
